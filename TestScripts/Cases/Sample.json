@@ -1,0 +1,14 @@
+[
+  {
+    "Framework": "MSTest",
+    "Text": "TestMethod"
+  },
+  {
+    "Framework": "NUnit", 
+    "Text": "Test"
+  },
+  {
+    "Framework": "xUnit",
+    "Text": "Fact"
+  }
+]
