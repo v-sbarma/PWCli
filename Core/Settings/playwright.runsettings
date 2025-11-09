@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <RunConfiguration>
+    <!-- Series Execution: Tests run one after another -->
+    <MaxCpuCount>1</MaxCpuCount>
+    <DisableParallelization>true</DisableParallelization>
+    <EnvironmentVariables>
+      <!-- Browser Configuration -->
+      <HEADED>1</HEADED>
+      <BROWSER_SHARED>1</BROWSER_SHARED>
+      <BROWSER_SLOWMO>300</BROWSER_SLOWMO>
+      <!-- UI Interaction Settings -->
+      <UI_WAIT_TIME>800</UI_WAIT_TIME>
+      <UI_HIGHLIGHT_COLOR>yellow</UI_HIGHLIGHT_COLOR>
+      <!-- Test Execution Mode -->
+      <!-- <TEST_MODE>SERIES</TEST_MODE> -->
+      <!-- <TEST_MODE>PARALLEL</TEST_MODE> -->
+      <TEST_MODE>PARALLEL</TEST_MODE>
+    </EnvironmentVariables>
+  </RunConfiguration>
+</RunSettings>

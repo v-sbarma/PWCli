@@ -1,16 +1,18 @@
 using Microsoft.Playwright;
-using Microsoft.Playwright.Xunit;
 using PWCli.Core.Utils;
 using Xunit;
+using static Microsoft.Playwright.Assertions;
 
 namespace PWCli.TestScripts.Scenarios;
 
 [CollectionDefinition("Sequential", DisableParallelization = true)]
-public class SequentialCollection : ICollectionFixture<object> { }
+public class SequentialCollection : ICollectionFixture<SharedBrowserFixture> { }
 
 [Collection("Sequential")]
-public class Sample : PageTest
+public class Sample : SharedBrowserTestBase
 {
+    public Sample(SharedBrowserFixture browserFixture) : base(browserFixture) { }
+
     [Fact]
     public async Task MSTest() => await RunFrameworkTest("MSTest", "TestMethod");
     
@@ -29,14 +31,19 @@ public class Sample : PageTest
         {
             TestLogger.LogTestStart(testName);
             
-            TestLogger.LogStep("Navigating to Playwright documentation page");
-            await Page.GotoAsync("https://playwright.dev/dotnet/docs/intro");
-            
             TestLogger.LogStep($"Clicking {framework} framework tab");
-            await Page.GetByRole(AriaRole.Tab, new() { Name = framework }).First.ClickAsync();
+            await ClickWithHighlightAsync(Page.GetByRole(AriaRole.Tab, new() { Name = framework }).First);
             
             TestLogger.LogStep($"Verifying '{attribute}' code attribute is visible");
-            await Expect(Page.Locator($"code:has-text('{attribute}')").First).ToBeVisibleAsync();
+            var codeLocator = Page.Locator($"code:has-text('{attribute}')").First;
+            await Expect(codeLocator).ToBeVisibleAsync();
+            
+            // Highlight the found element briefly
+            var waitTime = int.Parse(Environment.GetEnvironmentVariable("UI_WAIT_TIME") ?? "500");
+            var highlightColor = Environment.GetEnvironmentVariable("UI_HIGHLIGHT_COLOR") ?? "yellow";
+            await codeLocator.EvaluateAsync($"element => {{ element.style.backgroundColor = '{highlightColor}'; }}");
+            await Task.Delay(waitTime);
+            await codeLocator.EvaluateAsync("element => { element.style.backgroundColor = ''; }");
             
             var duration = DateTime.Now - startTime;
             TestLogger.LogPass(testName, duration);
